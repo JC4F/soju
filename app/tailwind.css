@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -74,4 +76,23 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  font-family: Inter, Verdana, Geneva, Tahoma, sans-serif;
+  @apply bg-background text-foreground;
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d3d1cb;
+}
+
+::-webkit-scrollbar-track {
+  background: #edece9;
 }
