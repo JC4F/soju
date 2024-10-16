@@ -7,7 +7,10 @@
     "source.addMissingImports": "explicit"
     // "source.organizeImports": "explicit"
   },
-  "scss.lint.unknownAtRules": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "./node_modules/typescript/lib",
   // ^ pretty sure this needs to go in workspace settings
