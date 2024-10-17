@@ -1,7 +1,7 @@
-import { Loader, Menu } from "lucide-react";
+import { Film, Home, Loader, Menu } from "lucide-react";
 import {
   Button,
-  ListItem,
+  CustomNavigationMenuLink,
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -11,6 +11,65 @@ import {
 } from "~/components/ui";
 import Logo from "~/assets/images/logo_loading.png";
 import { NavLink } from "@remix-run/react";
+
+type SubLink = {
+  // icon: React.ReactNode;
+  to: string;
+  title: string;
+  description: string;
+};
+
+type SideBarItem = {
+  icon: React.ReactNode;
+  to: string;
+  sub?: {
+    title: string;
+    titleTo: string;
+    imgSrc: string;
+    imgTo: string;
+    subLink: SubLink[];
+  };
+};
+
+const sideBarLink: SideBarItem[] = [
+  {
+    icon: <Home className="mr-4" />,
+    to: "Home",
+  },
+  {
+    icon: <Film className="mr-4" />,
+    to: "Movies",
+    sub: {
+      title: "Discover",
+      titleTo: "/discover/movies",
+      imgSrc:
+        "https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg",
+      imgTo: "/movies",
+      subLink: [
+        {
+          title: "Popular",
+          description: "Widely watched and buzzed-about films",
+          to: "/movies/popular",
+        },
+        {
+          title: "Now Playing",
+          description: "Widely watched and buzzed-about films",
+          to: "/movies/popular",
+        },
+        {
+          title: "Upcoming",
+          description: "Widely watched and buzzed-about films",
+          to: "/movies/popular",
+        },
+        {
+          title: "Top Rated",
+          description: "Widely watched and buzzed-about films",
+          to: "/movies/popular",
+        },
+      ],
+    },
+  },
+];
 
 export const SideBar = () => {
   return (
@@ -38,8 +97,43 @@ export const SideBar = () => {
         </div>
       </div>
 
-      <NavigationMenu className="left-auto right-0">
+      <div></div>
+      <NavigationMenu>
         <NavigationMenuList>
+          {sideBarLink.map((sideBar) => {
+            if (!sideBar.sub)
+              return (
+                <NavigationMenuLink key={sideBar.to} asChild>
+                  <NavLink to={sideBar.to}>
+                    {({ isActive, isPending }) => (
+                      <>
+                        <sideBar.icon className="mr-4" />
+                        {!sidebarMiniMode.value ||
+                        (sidebarHoverMode && isHovered)
+                          ? t("home")
+                          : null}
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value ||
+                                (sidebarHoverMode && isHovered))
+                                ? "ml-auto"
+                                : "!hidden",
+                            circle1: "border-b-default-foreground",
+                            circle2: "border-b-default-foreground",
+                          }}
+                        />
+                      </>
+                    )}
+                  </NavLink>
+                </NavigationMenuLink>
+              );
+
+            return <></>;
+          })}
+
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -61,15 +155,21 @@ export const SideBar = () => {
                     </a>
                   </NavigationMenuLink>
                 </li>
-                <ListItem href="/docs" title="Introduction">
+                <CustomNavigationMenuLink href="/docs" title="Introduction">
                   Re-usable components built using Radix UI and Tailwind CSS.
-                </ListItem>
-                <ListItem href="/docs/installation" title="Installation">
+                </CustomNavigationMenuLink>
+                <CustomNavigationMenuLink
+                  href="/docs/installation"
+                  title="Installation"
+                >
                   How to install dependencies and structure your app.
-                </ListItem>
-                <ListItem href="/docs/primitives/typography" title="Typography">
+                </CustomNavigationMenuLink>
+                <CustomNavigationMenuLink
+                  href="/docs/primitives/typography"
+                  title="Typography"
+                >
                   Styles for headings, paragraphs, lists...etc
-                </ListItem>
+                </CustomNavigationMenuLink>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
