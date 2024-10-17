@@ -1,4 +1,4 @@
-import { Film, Home, Loader, Menu } from "lucide-react";
+import { Film, Home, Loader, Menu, Telescope, TrendingUp } from "lucide-react";
 import {
   Button,
   CustomNavigationMenuLink,
@@ -8,6 +8,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  Spinner,
 } from "~/components/ui";
 import Logo from "~/assets/images/logo_loading.png";
 import { NavLink } from "@remix-run/react";
@@ -21,6 +22,7 @@ type SubLink = {
 
 type SideBarItem = {
   icon: React.ReactNode;
+  title: string;
   to: string;
   sub?: {
     title: string;
@@ -33,12 +35,24 @@ type SideBarItem = {
 
 const sideBarLink: SideBarItem[] = [
   {
-    icon: <Home className="mr-4" />,
-    to: "Home",
+    icon: <Home />,
+    title: "Home",
+    to: "/",
   },
   {
-    icon: <Film className="mr-4" />,
-    to: "Movies",
+    icon: <TrendingUp />,
+    title: "Trending",
+    to: "/trending",
+  },
+  {
+    icon: <Telescope />,
+    title: "Discover",
+    to: "/discover",
+  },
+  {
+    icon: <Film />,
+    title: "Movies",
+    to: "/movies",
     sub: {
       title: "Discover",
       titleTo: "/discover/movies",
@@ -74,7 +88,7 @@ const sideBarLink: SideBarItem[] = [
 export const SideBar = () => {
   return (
     <aside className="h-screen w-[250px] px-3 transition-[max-width] duration-500">
-      <div className="flex h-16 w-full items-center justify-center gap-2">
+      <div className="flex h-16 w-full items-center justify-center gap-4">
         <Button size="icon" variant="ghost">
           <Menu />
         </Button>
@@ -97,82 +111,75 @@ export const SideBar = () => {
         </div>
       </div>
 
-      <div></div>
-      <NavigationMenu>
-        <NavigationMenuList>
+      <NavigationMenu className="justify-start">
+        <NavigationMenuList className="flex-col items-start space-x-0">
           {sideBarLink.map((sideBar) => {
             if (!sideBar.sub)
               return (
-                <NavigationMenuLink key={sideBar.to} asChild>
-                  <NavLink to={sideBar.to}>
-                    {({ isActive, isPending }) => (
-                      <>
-                        <sideBar.icon className="mr-4" />
-                        {!sidebarMiniMode.value ||
-                        (sidebarHoverMode && isHovered)
-                          ? t("home")
-                          : null}
-                        <Spinner
-                          size="sm"
-                          classNames={{
-                            base:
-                              isPending &&
-                              (!sidebarMiniMode.value ||
-                                (sidebarHoverMode && isHovered))
-                                ? "ml-auto"
-                                : "!hidden",
-                            circle1: "border-b-default-foreground",
-                            circle2: "border-b-default-foreground",
-                          }}
-                        />
-                      </>
-                    )}
-                  </NavLink>
-                </NavigationMenuLink>
+                <NavigationMenuItem key={sideBar.to}>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to={sideBar.to}
+                      className="flex h-[56px] w-[226px] items-center justify-start gap-4 rounded-md px-4 py-2 font-medium transition-[width] duration-200 hover:bg-secondary"
+                    >
+                      {({ isActive, isPending }) => (
+                        <>
+                          {sideBar.icon}
+                          {sideBar.title}
+                          {isPending && <Spinner size="sm" />}
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               );
 
-            return <></>;
-          })}
-
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <li className="row-span-3">
-                  <NavigationMenuLink asChild>
-                    <a
-                      className="flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      href="/"
+            return (
+              <NavigationMenuItem key={sideBar.to}>
+                <NavigationMenuTrigger className="flex h-[56px] w-[226px] items-center justify-start gap-4 rounded-md px-4 py-2 text-base transition-[width] duration-200 hover:bg-secondary">
+                  {sideBar.icon}
+                  {sideBar.title}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                    <li className="row-span-3">
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                          href="/"
+                        >
+                          <Loader className="size-6" />
+                          <div className="mb-2 mt-4 text-lg font-medium">
+                            shadcn/ui
+                          </div>
+                          <p className="text-sm leading-tight text-muted-foreground">
+                            Beautifully designed components built with Radix UI
+                            and Tailwind CSS.
+                          </p>
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <CustomNavigationMenuLink href="/docs" title="Introduction">
+                      Re-usable components built using Radix UI and Tailwind
+                      CSS.
+                    </CustomNavigationMenuLink>
+                    <CustomNavigationMenuLink
+                      href="/docs/installation"
+                      title="Installation"
                     >
-                      <Loader className="size-6" />
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        shadcn/ui
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </a>
-                  </NavigationMenuLink>
-                </li>
-                <CustomNavigationMenuLink href="/docs" title="Introduction">
-                  Re-usable components built using Radix UI and Tailwind CSS.
-                </CustomNavigationMenuLink>
-                <CustomNavigationMenuLink
-                  href="/docs/installation"
-                  title="Installation"
-                >
-                  How to install dependencies and structure your app.
-                </CustomNavigationMenuLink>
-                <CustomNavigationMenuLink
-                  href="/docs/primitives/typography"
-                  title="Typography"
-                >
-                  Styles for headings, paragraphs, lists...etc
-                </CustomNavigationMenuLink>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+                      How to install dependencies and structure your app.
+                    </CustomNavigationMenuLink>
+                    <CustomNavigationMenuLink
+                      href="/docs/primitives/typography"
+                      title="Typography"
+                    >
+                      Styles for headings, paragraphs, lists...etc
+                    </CustomNavigationMenuLink>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            );
+          })}
         </NavigationMenuList>
       </NavigationMenu>
     </aside>
