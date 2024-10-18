@@ -1,4 +1,18 @@
-import { Film, Home, Menu, Telescope, TrendingUp } from "lucide-react";
+import {
+  ArrowUpRight,
+  Film,
+  History,
+  Home,
+  LayoutDashboard,
+  Menu,
+  Search,
+  Settings,
+  Telescope,
+  TrendingUp,
+  Tv,
+  TvMinimal,
+  User,
+} from "lucide-react";
 import {
   Button,
   NavigationMenu,
@@ -11,12 +25,13 @@ import {
 } from "~/components/ui";
 import Logo from "~/assets/images/logo_loading.png";
 import { Link, NavLink } from "@remix-run/react";
+import { cn } from "~/lib/utils";
 
 type SubLink = {
-  // icon: React.ReactNode;
+  icon: React.ReactNode;
   to: string;
   title: string;
-  description: string;
+  description?: string;
 };
 
 type SideBarItemBanner = {
@@ -53,6 +68,35 @@ const sideBarLink: SideBarItem[] = [
     to: "/discover",
   },
   {
+    icon: <Search />,
+    title: "Search",
+    to: "/search",
+    sub: {
+      subLink: [
+        {
+          icon: <Search className="mr-2 size-5" />,
+          title: "Search Movies",
+          to: "/movies/movies",
+        },
+        {
+          icon: <Search className="mr-2 size-5" />,
+          title: "Search TV Shows",
+          to: "/movies/shows",
+        },
+        {
+          icon: <Search className="mr-2 size-5" />,
+          title: "Anime",
+          to: "/movies/anime",
+        },
+        {
+          icon: <Search className="mr-2 size-5" />,
+          title: "People",
+          to: "/movies/people",
+        },
+      ],
+    },
+  },
+  {
     icon: <Film />,
     title: "Movies",
     to: "/movies",
@@ -66,21 +110,25 @@ const sideBarLink: SideBarItem[] = [
       },
       subLink: [
         {
+          icon: <Telescope className="mr-2 size-5" />,
           title: "Popular",
           description: "Widely watched and buzzed-about films",
           to: "/movies/popular",
         },
         {
+          icon: <Telescope className="mr-2 size-5" />,
           title: "Now Playing",
           description: "Currently showing in theaters",
           to: "/movies/now-playing",
         },
         {
+          icon: <Telescope className="mr-2 size-5" />,
           title: "Upcoming",
           description: "Releases coming soon to theaters",
           to: "/movies/upcoming",
         },
         {
+          icon: <Telescope className="mr-2 size-5" />,
           title: "Top Rated",
           description:
             "Highest rated films, based on viewers ratings and critic reviews",
@@ -88,6 +136,108 @@ const sideBarLink: SideBarItem[] = [
         },
       ],
     },
+  },
+  {
+    icon: <TvMinimal />,
+    title: "TV Shows",
+    to: "/shows",
+    sub: {
+      banner: {
+        title: "Discover",
+        titleTo: "/discover/shows",
+        imgSrc:
+          "https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+        imgTo: "/shows",
+      },
+      subLink: [
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Popular",
+          description: "Widely watched and buzzed-about shows",
+          to: "/shows/popular",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Airing Today",
+          description: "Currently playing on TV networks or streaming services",
+          to: "/shows/now-playing",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "On TV",
+          description: "Currently available to watch",
+          to: "/shows/upcoming",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Top Rated",
+          description:
+            "Highest rated TV shows, based on viewers ratings and critic reviews",
+          to: "/shows/top-rated",
+        },
+      ],
+    },
+  },
+  {
+    icon: <Tv />,
+    title: "Anime",
+    to: "/anime",
+    sub: {
+      banner: {
+        title: "Discover",
+        titleTo: "/discover/anime",
+        imgSrc:
+          "https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg",
+        imgTo: "/anime",
+      },
+      subLink: [
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Popular",
+          description: "Widely watched and buzzed-about anime",
+          to: "/anime/popular",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Trending",
+          description:
+            "Currently gaining popularity et attention among viewers",
+          to: "/anime/trending",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Recent Episodes",
+          description: "Latest episodes of ongoing anime series",
+          to: "/anime/recent-episodes",
+        },
+        {
+          icon: <Telescope className="mr-2 size-5" />,
+          title: "Random Anime",
+          description: "Randomly selected anime without any filters",
+          to: "/anime/random-anime",
+        },
+      ],
+    },
+  },
+  {
+    icon: <User />,
+    title: "People",
+    to: "/people",
+  },
+  {
+    icon: <LayoutDashboard />,
+    title: "Featured Lists",
+    to: "/featured-lists",
+  },
+  {
+    icon: <History />,
+    title: "History",
+    to: "/history",
+  },
+  {
+    icon: <Settings />,
+    title: "Settings",
+    to: "/settings",
   },
 ];
 
@@ -124,18 +274,25 @@ export const SideBar = () => {
               return (
                 <NavigationMenuItem key={sideBar.to}>
                   <NavigationMenuLink asChild>
-                    <NavLink
-                      to={sideBar.to}
-                      className="flex h-[56px] w-[226px] items-center justify-start gap-4 rounded-md px-4 py-2 font-medium transition-[width] duration-200 hover:bg-secondary"
-                    >
-                      {({ isActive, isPending }) => (
-                        <>
-                          {sideBar.icon}
-                          {sideBar.title}
-                          {isPending && <Spinner size="sm" />}
-                        </>
-                      )}
-                    </NavLink>
+                    <div>
+                      <NavLink
+                        to={sideBar.to}
+                        className={({ isActive }) =>
+                          cn(
+                            "flex h-[56px] w-[226px] items-center justify-start gap-4 rounded-md px-4 py-2 font-medium transition-[width] duration-200 hover:bg-secondary",
+                            isActive && "bg-secondary"
+                          )
+                        }
+                      >
+                        {({ isPending }) => (
+                          <>
+                            {sideBar.icon}
+                            {sideBar.title}
+                            {isPending && <Spinner size="sm" />}
+                          </>
+                        )}
+                      </NavLink>
+                    </div>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               );
@@ -149,12 +306,13 @@ export const SideBar = () => {
                 <NavigationMenuContent>
                   <ul className="flex w-fit gap-1.5 p-1.5">
                     {sideBar.sub.banner && (
-                      <li className="relative flex w-[215px] items-center">
+                      <li className="relative flex w-[215px] items-center justify-center">
                         <Link
-                          className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-sm hover:after:bg-white/10 data-[focus-visible=true]:z-20"
+                          className="absolute inset-x-0 top-2 z-20 mx-[10px] flex justify-between px-2 py-1 text-foreground"
                           to={sideBar.sub.banner.titleTo}
                         >
-                          {sideBar.sub.banner.title}
+                          <span>{sideBar.sub.banner.title}</span>
+                          <ArrowUpRight />
                         </Link>
                         <Link to={sideBar.sub.banner.imgTo}>
                           <img
@@ -163,31 +321,38 @@ export const SideBar = () => {
                             className="rounded-xl"
                           />
                         </Link>
-                        <h4 className="absolute bottom-0 z-10 justify-start backdrop-blur-sm">
+                        <h4 className="absolute inset-x-0 bottom-0 z-10 cursor-pointer justify-start p-3 text-center text-2xl font-semibold backdrop-blur-sm">
                           {sideBar.sub.banner.title}
                         </h4>
                       </li>
                     )}
-                    <li>
+                    <li className="flex flex-col justify-center">
                       {sideBar.sub.subLink.map((sublink) => (
                         <NavigationMenuLink key={sublink.to} asChild>
-                          <NavLink
-                            to={sublink.to}
-                            className="flex h-auto w-[215px] flex-col justify-start rounded-md p-2 hover:bg-secondary/[0.6] focus:bg-secondary/[0.6]"
-                          >
-                            {({ isActive, isPending }) => (
-                              <>
-                                <div className="mb-2 flex w-full flex-row items-center justify-start">
-                                  <Telescope className="mr-2 size-5" />
-                                  {sublink.title}
-                                  {isPending && <Spinner size="sm" />}
-                                </div>
-                                <p className="w-full text-xs text-foreground">
-                                  {sublink.description}
-                                </p>
-                              </>
-                            )}
-                          </NavLink>
+                          <div>
+                            <NavLink
+                              to={sublink.to}
+                              className={({ isActive }) =>
+                                cn(
+                                  "flex h-auto w-[215px] flex-col justify-start rounded-md p-2 hover:bg-secondary/[0.6] focus:bg-secondary/[0.6]",
+                                  isActive && "bg-secondary"
+                                )
+                              }
+                            >
+                              {({ isPending }) => (
+                                <>
+                                  <div className="mb-2 flex w-full flex-row items-center justify-start">
+                                    {sublink.icon}
+                                    {sublink.title}
+                                    {isPending && <Spinner size="sm" />}
+                                  </div>
+                                  <p className="w-full text-xs text-foreground">
+                                    {sublink.description}
+                                  </p>
+                                </>
+                              )}
+                            </NavLink>
+                          </div>
                         </NavigationMenuLink>
                       ))}
                     </li>
