@@ -1,7 +1,6 @@
-import { Film, Home, Loader, Menu, Telescope, TrendingUp } from "lucide-react";
+import { Film, Home, Menu, Telescope, TrendingUp } from "lucide-react";
 import {
   Button,
-  CustomNavigationMenuLink,
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -11,7 +10,7 @@ import {
   Spinner,
 } from "~/components/ui";
 import Logo from "~/assets/images/logo_loading.png";
-import { NavLink } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 
 type SubLink = {
   // icon: React.ReactNode;
@@ -20,15 +19,19 @@ type SubLink = {
   description: string;
 };
 
+type SideBarItemBanner = {
+  title: string;
+  titleTo: string;
+  imgSrc: string;
+  imgTo: string;
+};
+
 type SideBarItem = {
   icon: React.ReactNode;
   title: string;
   to: string;
   sub?: {
-    title: string;
-    titleTo: string;
-    imgSrc: string;
-    imgTo: string;
+    banner?: SideBarItemBanner;
     subLink: SubLink[];
   };
 };
@@ -54,11 +57,13 @@ const sideBarLink: SideBarItem[] = [
     title: "Movies",
     to: "/movies",
     sub: {
-      title: "Discover",
-      titleTo: "/discover/movies",
-      imgSrc:
-        "https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg",
-      imgTo: "/movies",
+      banner: {
+        title: "Discover",
+        titleTo: "/discover/movies",
+        imgSrc:
+          "https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg",
+        imgTo: "/movies",
+      },
       subLink: [
         {
           title: "Popular",
@@ -67,18 +72,19 @@ const sideBarLink: SideBarItem[] = [
         },
         {
           title: "Now Playing",
-          description: "Widely watched and buzzed-about films",
-          to: "/movies/popular",
+          description: "Currently showing in theaters",
+          to: "/movies/now-playing",
         },
         {
           title: "Upcoming",
-          description: "Widely watched and buzzed-about films",
-          to: "/movies/popular",
+          description: "Releases coming soon to theaters",
+          to: "/movies/upcoming",
         },
         {
           title: "Top Rated",
-          description: "Widely watched and buzzed-about films",
-          to: "/movies/popular",
+          description:
+            "Highest rated films, based on viewers ratings and critic reviews",
+          to: "/movies/top-rated",
         },
       ],
     },
@@ -141,40 +147,50 @@ export const SideBar = () => {
                   {sideBar.title}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                    <li className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <a
-                          className="flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                          href="/"
+                  <ul className="flex w-fit gap-1.5 p-1.5">
+                    {sideBar.sub.banner && (
+                      <li className="relative flex w-[215px] items-center">
+                        <Link
+                          className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-sm hover:after:bg-white/10 data-[focus-visible=true]:z-20"
+                          to={sideBar.sub.banner.titleTo}
                         >
-                          <Loader className="size-6" />
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            shadcn/ui
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Beautifully designed components built with Radix UI
-                            and Tailwind CSS.
-                          </p>
-                        </a>
-                      </NavigationMenuLink>
+                          {sideBar.sub.banner.title}
+                        </Link>
+                        <Link to={sideBar.sub.banner.imgTo}>
+                          <img
+                            alt="banner"
+                            src={sideBar.sub.banner.imgSrc}
+                            className="rounded-xl"
+                          />
+                        </Link>
+                        <h4 className="absolute bottom-0 z-10 justify-start backdrop-blur-sm">
+                          {sideBar.sub.banner.title}
+                        </h4>
+                      </li>
+                    )}
+                    <li>
+                      {sideBar.sub.subLink.map((sublink) => (
+                        <NavigationMenuLink key={sublink.to} asChild>
+                          <NavLink
+                            to={sublink.to}
+                            className="flex h-auto w-[215px] flex-col justify-start rounded-md p-2 hover:bg-secondary/[0.6] focus:bg-secondary/[0.6]"
+                          >
+                            {({ isActive, isPending }) => (
+                              <>
+                                <div className="mb-2 flex w-full flex-row items-center justify-start">
+                                  <Telescope className="mr-2 size-5" />
+                                  {sublink.title}
+                                  {isPending && <Spinner size="sm" />}
+                                </div>
+                                <p className="w-full text-xs text-foreground">
+                                  {sublink.description}
+                                </p>
+                              </>
+                            )}
+                          </NavLink>
+                        </NavigationMenuLink>
+                      ))}
                     </li>
-                    <CustomNavigationMenuLink href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
-                    </CustomNavigationMenuLink>
-                    <CustomNavigationMenuLink
-                      href="/docs/installation"
-                      title="Installation"
-                    >
-                      How to install dependencies and structure your app.
-                    </CustomNavigationMenuLink>
-                    <CustomNavigationMenuLink
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
-                    </CustomNavigationMenuLink>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
